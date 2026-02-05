@@ -1,15 +1,41 @@
 /**
- * The Hearth - Main JavaScript
+ * The Hearth - Main JavaScript (Static Version)
  */
 
 (function() {
   'use strict';
 
   // ============================================
-  // Config & State
+  // Configuration (edit these values directly)
   // ============================================
 
-  let config = null;
+  const CONFIG = {
+    // Gallery images - add/remove/edit as needed
+    // To add new images: upload to /images/gallery/ and add entry here
+    gallery: [
+      {
+        path: '/images/gallery/placeholder-1.svg',
+        caption: 'Artworks and creative productions'
+      },
+      {
+        path: '/images/gallery/placeholder-2.svg',
+        caption: 'Professional audio-visual equipment'
+      },
+      {
+        path: '/images/gallery/placeholder-3.svg',
+        caption: 'Story-driven content creation'
+      },
+      {
+        path: '/images/gallery/placeholder-4.svg',
+        caption: 'Live sound and recording sessions'
+      }
+    ]
+  };
+
+  // ============================================
+  // State
+  // ============================================
+
   let carouselIndex = 0;
   let carouselInterval = null;
 
@@ -49,111 +75,19 @@
   // Initialization
   // ============================================
 
-  async function init() {
+  function init() {
     // Set current year
     if (elements.currentYear) {
       elements.currentYear.textContent = new Date().getFullYear();
     }
 
-    // Load config and apply theme
-    await loadConfig();
     initTheme();
     initNavigation();
     initShareModal();
+    initGallery();
     initCarousel();
     initContactForm();
     initSmoothScroll();
-  }
-
-  // ============================================
-  // Config Loading
-  // ============================================
-
-  async function loadConfig() {
-    try {
-      const response = await fetch('/api/config');
-      config = await response.json();
-      applyConfig();
-    } catch (err) {
-      console.error('Failed to load config:', err);
-      config = getDefaultConfig();
-    }
-  }
-
-  function getDefaultConfig() {
-    return {
-      theme: {
-        primaryColor: '#c9a66b',
-        secondaryColor: '#8b7355',
-        accentColor: '#e8d5b7',
-        lightBg: '#faf8f5',
-        lightText: '#2c2c2c',
-        darkBg: '#1a1a1a',
-        darkText: '#f5f5f5',
-        fontHeading: 'Josefin Sans',
-        fontBody: 'Inter'
-      },
-      share: {
-        copyUrl: true,
-        twitter: true,
-        facebook: true,
-        linkedin: true,
-        email: true
-      },
-      gallery: []
-    };
-  }
-
-  function applyConfig() {
-    if (!config || !config.theme) return;
-
-    const root = document.documentElement;
-    const theme = config.theme;
-
-    // Apply colors
-    root.style.setProperty('--color-primary', theme.primaryColor);
-    root.style.setProperty('--color-secondary', theme.secondaryColor);
-    root.style.setProperty('--color-accent', theme.accentColor);
-
-    // Apply light theme colors
-    if (document.documentElement.getAttribute('data-theme') !== 'dark') {
-      root.style.setProperty('--color-bg', theme.lightBg);
-      root.style.setProperty('--color-text', theme.lightText);
-    }
-
-    // Apply fonts
-    if (theme.fontHeading) {
-      root.style.setProperty('--font-heading', `'${theme.fontHeading}', sans-serif`);
-    }
-    if (theme.fontBody) {
-      root.style.setProperty('--font-body', `'${theme.fontBody}', sans-serif`);
-    }
-
-    // Update Google Fonts link
-    updateGoogleFonts(theme.fontHeading, theme.fontBody);
-
-    // Apply share options
-    applyShareOptions();
-
-    // Load gallery
-    loadGallery();
-  }
-
-  function updateGoogleFonts(fontHeading, fontBody) {
-    const fontLink = document.getElementById('google-fonts');
-    if (!fontLink) return;
-
-    const fonts = [];
-    if (fontHeading) {
-      fonts.push(fontHeading.replace(/ /g, '+') + ':wght@300;400;500;600;700');
-    }
-    if (fontBody && fontBody !== fontHeading) {
-      fonts.push(fontBody.replace(/ /g, '+') + ':wght@300;400;500;600');
-    }
-
-    if (fonts.length > 0) {
-      fontLink.href = `https://fonts.googleapis.com/css2?family=${fonts.join('&family=')}&display=swap`;
-    }
   }
 
   // ============================================
@@ -167,7 +101,6 @@
 
     if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
       document.documentElement.setAttribute('data-theme', 'dark');
-      applyDarkThemeColors();
     }
 
     // Theme toggle listeners
@@ -182,10 +115,8 @@
       if (!localStorage.getItem('theme')) {
         if (e.matches) {
           document.documentElement.setAttribute('data-theme', 'dark');
-          applyDarkThemeColors();
         } else {
           document.documentElement.removeAttribute('data-theme');
-          applyLightThemeColors();
         }
       }
     });
@@ -197,27 +128,9 @@
     if (isDark) {
       document.documentElement.removeAttribute('data-theme');
       localStorage.setItem('theme', 'light');
-      applyLightThemeColors();
     } else {
       document.documentElement.setAttribute('data-theme', 'dark');
       localStorage.setItem('theme', 'dark');
-      applyDarkThemeColors();
-    }
-  }
-
-  function applyDarkThemeColors() {
-    if (config && config.theme) {
-      const root = document.documentElement;
-      root.style.setProperty('--color-bg', config.theme.darkBg);
-      root.style.setProperty('--color-text', config.theme.darkText);
-    }
-  }
-
-  function applyLightThemeColors() {
-    if (config && config.theme) {
-      const root = document.documentElement;
-      root.style.setProperty('--color-bg', config.theme.lightBg);
-      root.style.setProperty('--color-text', config.theme.lightText);
     }
   }
 
@@ -291,31 +204,6 @@
     });
   }
 
-  function applyShareOptions() {
-    if (!config || !config.share) return;
-
-    const modal = elements.shareModal;
-    if (!modal) return;
-
-    const options = modal.querySelectorAll('.share-option');
-    options.forEach(option => {
-      const type = option.dataset.share;
-      if (type === 'copy' && !config.share.copyUrl) {
-        option.style.display = 'none';
-      } else if (type === 'twitter' && !config.share.twitter) {
-        option.style.display = 'none';
-      } else if (type === 'facebook' && !config.share.facebook) {
-        option.style.display = 'none';
-      } else if (type === 'linkedin' && !config.share.linkedin) {
-        option.style.display = 'none';
-      } else if (type === 'email' && !config.share.email) {
-        option.style.display = 'none';
-      } else {
-        option.style.display = 'flex';
-      }
-    });
-  }
-
   function handleShare(type) {
     const url = encodeURIComponent(window.location.href);
     const title = encodeURIComponent('The Hearth - Professional Audio-Visual Production');
@@ -350,13 +238,13 @@
   }
 
   // ============================================
-  // Carousel
+  // Gallery & Carousel
   // ============================================
 
-  function loadGallery() {
-    if (!config || !config.gallery || !elements.carouselTrack) return;
+  function initGallery() {
+    if (!elements.carouselTrack) return;
 
-    const gallery = config.gallery.sort((a, b) => a.order - b.order);
+    const gallery = CONFIG.gallery;
 
     if (gallery.length === 0) {
       elements.carouselTrack.innerHTML = `
@@ -384,20 +272,11 @@
         <button class="carousel-dot ${i === 0 ? 'active' : ''}" data-index="${i}" aria-label="Go to slide ${i + 1}"></button>
       `).join('');
     }
-
-    // Show controls
-    if (elements.carouselPrev) elements.carouselPrev.style.display = 'flex';
-    if (elements.carouselNext) elements.carouselNext.style.display = 'flex';
-    if (elements.carouselDots) elements.carouselDots.style.display = 'flex';
-
-    initCarouselControls();
   }
 
   function initCarousel() {
-    // Controls will be initialized after gallery loads
-  }
+    if (CONFIG.gallery.length === 0) return;
 
-  function initCarouselControls() {
     if (elements.carouselPrev) {
       elements.carouselPrev.addEventListener('click', () => navigateCarousel(-1));
     }
@@ -435,26 +314,16 @@
 
       elements.carouselTrack.addEventListener('touchend', (e) => {
         touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-      }, { passive: true });
-    }
-
-    function handleSwipe() {
-      const diff = touchStartX - touchEndX;
-      if (Math.abs(diff) > 50) {
-        if (diff > 0) {
-          navigateCarousel(1);
-        } else {
-          navigateCarousel(-1);
+        const diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 50) {
+          navigateCarousel(diff > 0 ? 1 : -1);
         }
-      }
+      }, { passive: true });
     }
   }
 
   function navigateCarousel(direction) {
-    if (!config || !config.gallery) return;
-
-    const totalSlides = config.gallery.length;
+    const totalSlides = CONFIG.gallery.length;
     if (totalSlides === 0) return;
 
     carouselIndex = (carouselIndex + direction + totalSlides) % totalSlides;
@@ -471,7 +340,6 @@
       elements.carouselTrack.style.transform = `translateX(-${carouselIndex * 100}%)`;
     }
 
-    // Update dots
     if (elements.carouselDots) {
       elements.carouselDots.querySelectorAll('.carousel-dot').forEach((dot, i) => {
         dot.classList.toggle('active', i === carouselIndex);
@@ -501,24 +369,21 @@
     elements.contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const formData = new FormData(elements.contactForm);
-      const data = Object.fromEntries(formData);
-
-      // Disable form
       const submitBtn = elements.contactForm.querySelector('button[type="submit"]');
       submitBtn.disabled = true;
       submitBtn.textContent = 'Sending...';
 
       try {
-        const response = await fetch('/api/contact', {
+        const formData = new FormData(elements.contactForm);
+
+        const response = await fetch('/contact.php', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
+          body: formData
         });
 
         const result = await response.json();
 
-        if (response.ok) {
+        if (result.success) {
           showFormStatus('success', 'Message sent successfully! We\'ll get back to you soon.');
           elements.contactForm.reset();
         } else {
@@ -540,7 +405,6 @@
     elements.formStatus.className = 'form-status ' + type;
     elements.formStatus.textContent = message;
 
-    // Auto-hide after 5 seconds
     setTimeout(() => {
       elements.formStatus.className = 'form-status';
       elements.formStatus.textContent = '';
@@ -571,24 +435,20 @@
   // ============================================
 
   function showToast(message) {
-    // Remove existing toast
     const existingToast = document.querySelector('.toast');
     if (existingToast) {
       existingToast.remove();
     }
 
-    // Create new toast
     const toast = document.createElement('div');
     toast.className = 'toast';
     toast.textContent = message;
     document.body.appendChild(toast);
 
-    // Show toast
     requestAnimationFrame(() => {
       toast.classList.add('show');
     });
 
-    // Hide and remove toast
     setTimeout(() => {
       toast.classList.remove('show');
       setTimeout(() => toast.remove(), 300);

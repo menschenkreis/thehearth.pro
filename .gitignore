@@ -1,13 +1,3 @@
-# Dependencies
-node_modules/
-
-# Environment
-.env
-
-# Uploads (user-uploaded content)
-uploads/*
-!uploads/.gitkeep
-
 # OS files
 .DS_Store
 Thumbs.db
@@ -20,4 +10,3 @@ Thumbs.db
 
 # Logs
 *.log
-npm-debug.log*
