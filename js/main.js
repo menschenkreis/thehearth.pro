@@ -65,10 +65,6 @@
     carouselPrev: document.getElementById('carousel-prev'),
     carouselNext: document.getElementById('carousel-next'),
 
-    // Contact
-    contactForm: document.getElementById('contact-form'),
-    formStatus: document.getElementById('form-status'),
-
     // Footer
     currentYear: document.getElementById('current-year')
   };
@@ -88,7 +84,6 @@
     initShareModal();
     initGallery();
     initCarousel();
-    initContactForm();
     initSmoothScroll();
   }
 
@@ -347,58 +342,6 @@
       clearInterval(carouselInterval);
       carouselInterval = null;
     }
-  }
-
-  // ============================================
-  // Contact Form
-  // ============================================
-
-  function initContactForm() {
-    if (!elements.contactForm) return;
-
-    elements.contactForm.addEventListener('submit', async function(e) {
-      e.preventDefault();
-
-      var submitBtn = elements.contactForm.querySelector('button[type="submit"]');
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending...';
-
-      try {
-        var formData = new FormData(elements.contactForm);
-
-        var response = await fetch('/contact.php', {
-          method: 'POST',
-          body: formData
-        });
-
-        var result = await response.json();
-
-        if (result.success) {
-          showFormStatus('success', 'Message sent successfully! We\'ll get back to you soon.');
-          elements.contactForm.reset();
-        } else {
-          showFormStatus('error', result.error || 'Failed to send message. Please try again.');
-        }
-      } catch (err) {
-        console.error('Contact form error:', err);
-        showFormStatus('error', 'Failed to send message. Please try again later.');
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Message';
-      }
-    });
-  }
-
-  function showFormStatus(type, message) {
-    if (!elements.formStatus) return;
-
-    elements.formStatus.className = 'form-status ' + type;
-    elements.formStatus.textContent = message;
-
-    setTimeout(function() {
-      elements.formStatus.className = 'form-status';
-      elements.formStatus.textContent = '';
-    }, 5000);
   }
 
   // ============================================
