@@ -228,6 +228,12 @@ input, textarea {
   height: 40px;
   border-radius: 50%;
   object-fit: contain;
+  transition: filter var(--transition-base);
+}
+
+/* Invert black logo on dark backgrounds */
+[data-theme="dark"] .logo-img {
+  filter: invert(1);
 }
 
 .logo-text {
@@ -457,6 +463,7 @@ input, textarea {
   height: 120px;
   border-radius: 50%;
   object-fit: contain;
+  filter: invert(1);
 }
 
 .hero-brand {
@@ -468,6 +475,7 @@ input, textarea {
   width: 100%;
   height: auto;
   object-fit: contain;
+  filter: invert(1);
 }
 
 .hero-tagline {
@@ -530,6 +538,10 @@ input, textarea {
 .navbar.at-hero .nav-toggle span,
 .navbar.at-hero .btn-ghost {
   color: var(--hero-text);
+}
+
+.navbar.at-hero .logo-img {
+  filter: invert(1);
 }
 
 .navbar.at-hero .nav-toggle span {
@@ -941,6 +953,7 @@ input, textarea {
   height: 48px;
   border-radius: 50%;
   object-fit: contain;
+  filter: invert(1);
 }
 
 .footer-tagline {

@@ -98,25 +98,15 @@
 
   function initTheme() {
     const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+    // Light theme is the default — only apply dark if explicitly saved
+    if (savedTheme === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark');
     }
 
     [elements.themeToggle, elements.themeToggleMobile].forEach(btn => {
       if (btn) {
         btn.addEventListener('click', toggleTheme);
-      }
-    });
-
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      if (!localStorage.getItem('theme')) {
-        if (e.matches) {
-          document.documentElement.setAttribute('data-theme', 'dark');
-        } else {
-          document.documentElement.removeAttribute('data-theme');
-        }
       }
     });
   }
