@@ -622,7 +622,7 @@ input, textarea {
 .offering-image {
   width: 100%;
   overflow: hidden;
-  background: var(--hero-bg);
+  background: var(--color-bg-alt);
 }
 
 .offering-image img {
