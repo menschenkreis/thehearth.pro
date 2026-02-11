@@ -38,46 +38,33 @@
   let carouselInterval = null;
 
   // ============================================
-  // DOM Elements
+  // DOM Elements (populated in init)
   // ============================================
 
-  const elements = {
-    // Theme
-    themeToggle: document.getElementById('theme-toggle'),
-    themeToggleMobile: document.getElementById('theme-toggle-mobile'),
-
-    // Navigation
-    navbar: document.querySelector('.navbar'),
-    navToggle: document.getElementById('nav-toggle'),
-    navMobile: document.getElementById('nav-mobile'),
-
-    // Share
-    shareBtn: document.getElementById('share-btn'),
-    shareBtnMobile: document.getElementById('share-btn-mobile'),
-    shareModal: document.getElementById('share-modal'),
-
-    // Hero
-    hero: document.querySelector('.hero'),
-
-    // Carousel
-    carouselTrack: document.getElementById('carousel-track'),
-    carouselDots: document.getElementById('carousel-dots'),
-    carouselPrev: document.getElementById('carousel-prev'),
-    carouselNext: document.getElementById('carousel-next'),
-
-    // Contact
-    contactForm: document.getElementById('contact-form'),
-    formStatus: document.getElementById('form-status'),
-
-    // Footer
-    currentYear: document.getElementById('current-year')
-  };
+  var elements = {};
 
   // ============================================
   // Initialization
   // ============================================
 
   function init() {
+    elements = {
+      themeToggle: document.getElementById('theme-toggle'),
+      themeToggleMobile: document.getElementById('theme-toggle-mobile'),
+      navbar: document.querySelector('.navbar'),
+      navToggle: document.getElementById('nav-toggle'),
+      navMobile: document.getElementById('nav-mobile'),
+      shareBtn: document.getElementById('share-btn'),
+      shareBtnMobile: document.getElementById('share-btn-mobile'),
+      shareModal: document.getElementById('share-modal'),
+      hero: document.querySelector('.hero'),
+      carouselTrack: document.getElementById('carousel-track'),
+      carouselDots: document.getElementById('carousel-dots'),
+      carouselPrev: document.getElementById('carousel-prev'),
+      carouselNext: document.getElementById('carousel-next'),
+      currentYear: document.getElementById('current-year')
+    };
+
     if (elements.currentYear) {
       elements.currentYear.textContent = new Date().getFullYear();
     }
@@ -88,7 +75,6 @@
     initShareModal();
     initGallery();
     initCarousel();
-    initContactForm();
     initSmoothScroll();
   }
 
@@ -98,25 +84,15 @@
 
   function initTheme() {
     const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+    // Light theme is the default — only apply dark if explicitly saved
+    if (savedTheme === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark');
     }
 
     [elements.themeToggle, elements.themeToggleMobile].forEach(btn => {
       if (btn) {
         btn.addEventListener('click', toggleTheme);
-      }
-    });
-
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      if (!localStorage.getItem('theme')) {
-        if (e.matches) {
-          document.documentElement.setAttribute('data-theme', 'dark');
-        } else {
-          document.documentElement.removeAttribute('data-theme');
-        }
       }
     });
   }
@@ -140,16 +116,28 @@
   function initNavigation() {
     if (elements.navToggle && elements.navMobile) {
       elements.navToggle.addEventListener('click', () => {
-        elements.navToggle.classList.toggle('active');
-        elements.navMobile.classList.toggle('active');
+        var isOpen = elements.navMobile.classList.toggle('active');
+        elements.navToggle.classList.toggle('active', isOpen);
+        elements.navToggle.setAttribute('aria-expanded', isOpen);
+        elements.navMobile.setAttribute('aria-hidden', !isOpen);
       });
 
       elements.navMobile.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
-          elements.navToggle.classList.remove('active');
-          elements.navMobile.classList.remove('active');
+          closeNav();
         });
       });
+    }
+  }
+
+  function closeNav() {
+    if (elements.navToggle) {
+      elements.navToggle.classList.remove('active');
+      elements.navToggle.setAttribute('aria-expanded', 'false');
+    }
+    if (elements.navMobile) {
+      elements.navMobile.classList.remove('active');
+      elements.navMobile.setAttribute('aria-hidden', 'true');
     }
   }
 
@@ -188,8 +176,7 @@
       if (btn) {
         btn.addEventListener('click', () => {
           modal.classList.add('active');
-          if (elements.navToggle) elements.navToggle.classList.remove('active');
-          if (elements.navMobile) elements.navMobile.classList.remove('active');
+          closeNav();
         });
       }
     });
@@ -357,58 +344,6 @@
       clearInterval(carouselInterval);
       carouselInterval = null;
     }
-  }
-
-  // ============================================
-  // Contact Form
-  // ============================================
-
-  function initContactForm() {
-    if (!elements.contactForm) return;
-
-    elements.contactForm.addEventListener('submit', async function(e) {
-      e.preventDefault();
-
-      var submitBtn = elements.contactForm.querySelector('button[type="submit"]');
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending...';
-
-      try {
-        var formData = new FormData(elements.contactForm);
-
-        var response = await fetch('/contact.php', {
-          method: 'POST',
-          body: formData
-        });
-
-        var result = await response.json();
-
-        if (result.success) {
-          showFormStatus('success', 'Message sent successfully! We\'ll get back to you soon.');
-          elements.contactForm.reset();
-        } else {
-          showFormStatus('error', result.error || 'Failed to send message. Please try again.');
-        }
-      } catch (err) {
-        console.error('Contact form error:', err);
-        showFormStatus('error', 'Failed to send message. Please try again later.');
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Message';
-      }
-    });
-  }
-
-  function showFormStatus(type, message) {
-    if (!elements.formStatus) return;
-
-    elements.formStatus.className = 'form-status ' + type;
-    elements.formStatus.textContent = message;
-
-    setTimeout(function() {
-      elements.formStatus.className = 'form-status';
-      elements.formStatus.textContent = '';
-    }, 5000);
   }
 
   // ============================================

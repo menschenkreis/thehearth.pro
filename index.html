@@ -12,6 +12,7 @@
   <meta property="og:description" content="Shaping time, preserving stories. High-end video documentation and live sound recording.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://thehearth.pro">
+  <meta property="og:image" content="https://thehearth.pro/images/logo_icon.png">
 
   <title>The Hearth - Professional Audio-Visual Production</title>
 
@@ -29,7 +30,7 @@
   <!-- Navigation -->
   <nav class="navbar">
     <div class="nav-container">
-      <a href="#" class="nav-logo">
+      <a href="#home" class="nav-logo">
         <img src="/images/logo_icon.png" alt="The Hearth" class="logo-img">
         <span class="logo-text">The Hearth</span>
       </a>
@@ -66,14 +67,14 @@
         </button>
         <a href="#contact" class="btn btn-primary">Get in Touch</a>
       </div>
-      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-mobile">
         <span></span>
         <span></span>
         <span></span>
       </button>
     </div>
     <!-- Mobile menu -->
-    <div class="nav-mobile" id="nav-mobile">
+    <div class="nav-mobile" id="nav-mobile" role="menu" aria-hidden="true">
       <a href="#offerings">Offerings</a>
       <a href="#about">About</a>
       <a href="#gallery">Gallery</a>
@@ -191,7 +192,7 @@
         </div>
         <div class="offering-card">
           <div class="offering-image">
-            <img src="/images/offering_management.svg" alt="Production Management">
+            <img src="/images/offering_management.png" alt="Production Management">
           </div>
           <div class="offering-body">
             <h3>Management</h3>
@@ -200,7 +201,7 @@
         </div>
         <div class="offering-card">
           <div class="offering-image">
-            <img src="/images/offering_audio.svg" alt="Live Sound and Recording">
+            <img src="/images/offering_audio.png" alt="Live Sound and Recording">
           </div>
           <div class="offering-body">
             <h3>Audio</h3>
@@ -256,28 +257,9 @@
     <div class="container">
       <h2 class="section-title">Get in Touch</h2>
       <p class="section-subtitle">Ready to bring your vision to life? Let's talk.</p>
-      <form class="contact-form" id="contact-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="name">Name *</label>
-            <input type="text" id="name" name="name" required placeholder="Your name">
-          </div>
-          <div class="form-group">
-            <label for="email">Email *</label>
-            <input type="email" id="email" name="email" required placeholder="your@email.com">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="subject">Subject</label>
-          <input type="text" id="subject" name="subject" placeholder="What's this about?">
-        </div>
-        <div class="form-group">
-          <label for="message">Message *</label>
-          <textarea id="message" name="message" rows="5" required placeholder="Tell us about your project..."></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary btn-lg">Send Message</button>
-        <div class="form-status" id="form-status"></div>
-      </form>
+      <div class="contact-cta">
+        <a href="mailto:join@thehearth.pro" class="contact-email">join@thehearth.pro</a>
+      </div>
     </div>
   </section>
 

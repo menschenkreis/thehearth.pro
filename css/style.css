@@ -103,6 +103,13 @@ a:hover {
   color: var(--color-secondary);
 }
 
+/* Focus styles for keyboard navigation */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -228,6 +235,12 @@ input, textarea {
   height: 40px;
   border-radius: 50%;
   object-fit: contain;
+  transition: filter var(--transition-base);
+}
+
+/* Invert black logo on dark backgrounds */
+[data-theme="dark"] .logo-img {
+  filter: invert(1);
 }
 
 .logo-text {
@@ -305,6 +318,11 @@ input, textarea {
   padding: var(--space-lg);
   background: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
+  position: fixed;
+  top: var(--nav-height);
+  left: 0;
+  right: 0;
+  z-index: 999;
 }
 
 .nav-mobile.active {
@@ -457,6 +475,7 @@ input, textarea {
   height: 120px;
   border-radius: 50%;
   object-fit: contain;
+  filter: invert(1);
 }
 
 .hero-brand {
@@ -468,6 +487,7 @@ input, textarea {
   width: 100%;
   height: auto;
   object-fit: contain;
+  filter: invert(1);
 }
 
 .hero-tagline {
@@ -530,6 +550,10 @@ input, textarea {
 .navbar.at-hero .nav-toggle span,
 .navbar.at-hero .btn-ghost {
   color: var(--hero-text);
+}
+
+.navbar.at-hero .logo-img {
+  filter: invert(1);
 }
 
 .navbar.at-hero .nav-toggle span {
@@ -597,15 +621,14 @@ input, textarea {
 
 .offering-image {
   width: 100%;
-  aspect-ratio: 16 / 10;
   overflow: hidden;
-  background: var(--hero-bg);
+  background: var(--color-bg-alt);
 }
 
 .offering-image img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
   transition: transform var(--transition-slow);
 }
 
@@ -657,9 +680,8 @@ input, textarea {
 
 .about-image img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  aspect-ratio: 4 / 5;
+  height: auto;
+  object-fit: contain;
 }
 
 .about-title {
@@ -693,7 +715,7 @@ input, textarea {
   }
 
   .about-image img {
-    aspect-ratio: 3 / 2;
+    width: 100%;
   }
 
   .about-text {
@@ -732,8 +754,8 @@ input, textarea {
 
 .carousel-slide img {
   width: 100%;
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
   border-radius: var(--radius-lg);
   box-shadow: 0 8px 30px var(--color-shadow);
 }
@@ -774,11 +796,11 @@ input, textarea {
 }
 
 .carousel-btn-prev {
-  left: -24px;
+  left: var(--space-md);
 }
 
 .carousel-btn-next {
-  right: -24px;
+  right: var(--space-md);
 }
 
 .carousel-dots {
@@ -809,14 +831,6 @@ input, textarea {
     width: 40px;
     height: 40px;
   }
-
-  .carousel-btn-prev {
-    left: var(--space-sm);
-  }
-
-  .carousel-btn-next {
-    right: var(--space-sm);
-  }
 }
 
 /* Empty gallery state */
@@ -827,88 +841,28 @@ input, textarea {
 }
 
 /* ============================================
-   Contact Form
+   Contact
    ============================================ */
 
 .contact {
   background: var(--color-bg);
 }
 
-.contact-form {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--space-lg);
-}
-
-.form-group {
-  margin-bottom: var(--space-lg);
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: var(--space-sm);
-  font-weight: 500;
-  font-size: 0.9rem;
-}
-
-.form-group input,
-.form-group textarea {
-  width: 100%;
-  padding: var(--space-md);
-  background: var(--color-bg-alt);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  color: var(--color-text);
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(201, 166, 107, 0.2);
-}
-
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-  color: var(--color-text-muted);
-  opacity: 0.7;
-}
-
-.form-group textarea {
-  resize: vertical;
-  min-height: 120px;
-}
-
-.contact-form .btn {
-  width: 100%;
-}
-
-.form-status {
-  margin-top: var(--space-lg);
-  padding: var(--space-md);
-  border-radius: var(--radius-md);
+.contact-cta {
   text-align: center;
-  display: none;
 }
 
-.form-status.success {
-  display: block;
-  background: rgba(76, 175, 80, 0.1);
-  color: #4caf50;
-  border: 1px solid rgba(76, 175, 80, 0.3);
+.contact-email {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--color-text);
+  transition: color var(--transition-fast);
 }
 
-.form-status.error {
-  display: block;
-  background: rgba(244, 67, 54, 0.1);
-  color: #f44336;
-  border: 1px solid rgba(244, 67, 54, 0.3);
+.contact-email:hover {
+  color: var(--color-primary);
 }
 
 /* ============================================
@@ -941,6 +895,7 @@ input, textarea {
   height: 48px;
   border-radius: 50%;
   object-fit: contain;
+  filter: invert(1);
 }
 
 .footer-tagline {
