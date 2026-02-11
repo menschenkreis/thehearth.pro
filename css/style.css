@@ -103,6 +103,13 @@ a:hover {
   color: var(--color-secondary);
 }
 
+/* Focus styles for keyboard navigation */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -311,6 +318,11 @@ input, textarea {
   padding: var(--space-lg);
   background: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
+  position: fixed;
+  top: var(--nav-height);
+  left: 0;
+  right: 0;
+  z-index: 999;
 }
 
 .nav-mobile.active {
@@ -784,11 +796,11 @@ input, textarea {
 }
 
 .carousel-btn-prev {
-  left: -24px;
+  left: var(--space-md);
 }
 
 .carousel-btn-next {
-  right: -24px;
+  right: var(--space-md);
 }
 
 .carousel-dots {
@@ -818,14 +830,6 @@ input, textarea {
   .carousel-btn {
     width: 40px;
     height: 40px;
-  }
-
-  .carousel-btn-prev {
-    left: var(--space-sm);
-  }
-
-  .carousel-btn-next {
-    right: var(--space-sm);
   }
 }
 

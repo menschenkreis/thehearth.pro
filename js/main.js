@@ -38,42 +38,33 @@
   let carouselInterval = null;
 
   // ============================================
-  // DOM Elements
+  // DOM Elements (populated in init)
   // ============================================
 
-  const elements = {
-    // Theme
-    themeToggle: document.getElementById('theme-toggle'),
-    themeToggleMobile: document.getElementById('theme-toggle-mobile'),
-
-    // Navigation
-    navbar: document.querySelector('.navbar'),
-    navToggle: document.getElementById('nav-toggle'),
-    navMobile: document.getElementById('nav-mobile'),
-
-    // Share
-    shareBtn: document.getElementById('share-btn'),
-    shareBtnMobile: document.getElementById('share-btn-mobile'),
-    shareModal: document.getElementById('share-modal'),
-
-    // Hero
-    hero: document.querySelector('.hero'),
-
-    // Carousel
-    carouselTrack: document.getElementById('carousel-track'),
-    carouselDots: document.getElementById('carousel-dots'),
-    carouselPrev: document.getElementById('carousel-prev'),
-    carouselNext: document.getElementById('carousel-next'),
-
-    // Footer
-    currentYear: document.getElementById('current-year')
-  };
+  var elements = {};
 
   // ============================================
   // Initialization
   // ============================================
 
   function init() {
+    elements = {
+      themeToggle: document.getElementById('theme-toggle'),
+      themeToggleMobile: document.getElementById('theme-toggle-mobile'),
+      navbar: document.querySelector('.navbar'),
+      navToggle: document.getElementById('nav-toggle'),
+      navMobile: document.getElementById('nav-mobile'),
+      shareBtn: document.getElementById('share-btn'),
+      shareBtnMobile: document.getElementById('share-btn-mobile'),
+      shareModal: document.getElementById('share-modal'),
+      hero: document.querySelector('.hero'),
+      carouselTrack: document.getElementById('carousel-track'),
+      carouselDots: document.getElementById('carousel-dots'),
+      carouselPrev: document.getElementById('carousel-prev'),
+      carouselNext: document.getElementById('carousel-next'),
+      currentYear: document.getElementById('current-year')
+    };
+
     if (elements.currentYear) {
       elements.currentYear.textContent = new Date().getFullYear();
     }
@@ -125,16 +116,28 @@
   function initNavigation() {
     if (elements.navToggle && elements.navMobile) {
       elements.navToggle.addEventListener('click', () => {
-        elements.navToggle.classList.toggle('active');
-        elements.navMobile.classList.toggle('active');
+        var isOpen = elements.navMobile.classList.toggle('active');
+        elements.navToggle.classList.toggle('active', isOpen);
+        elements.navToggle.setAttribute('aria-expanded', isOpen);
+        elements.navMobile.setAttribute('aria-hidden', !isOpen);
       });
 
       elements.navMobile.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
-          elements.navToggle.classList.remove('active');
-          elements.navMobile.classList.remove('active');
+          closeNav();
         });
       });
+    }
+  }
+
+  function closeNav() {
+    if (elements.navToggle) {
+      elements.navToggle.classList.remove('active');
+      elements.navToggle.setAttribute('aria-expanded', 'false');
+    }
+    if (elements.navMobile) {
+      elements.navMobile.classList.remove('active');
+      elements.navMobile.setAttribute('aria-hidden', 'true');
     }
   }
 
@@ -173,8 +176,7 @@
       if (btn) {
         btn.addEventListener('click', () => {
           modal.classList.add('active');
-          if (elements.navToggle) elements.navToggle.classList.remove('active');
-          if (elements.navMobile) elements.navMobile.classList.remove('active');
+          closeNav();
         });
       }
     });
