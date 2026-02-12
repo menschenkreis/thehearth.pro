@@ -13,19 +13,19 @@
     gallery: [
       {
         path: '/images/gallery/placeholder-1.svg',
-        caption: 'Artworks and creative productions'
+        caption: 'Event videography'
       },
       {
         path: '/images/gallery/placeholder-2.svg',
-        caption: 'Professional audio-visual equipment'
+        caption: 'Hospitality and property documentation'
       },
       {
         path: '/images/gallery/placeholder-3.svg',
-        caption: 'Story-driven content creation'
+        caption: 'Post-production and editing'
       },
       {
         path: '/images/gallery/placeholder-4.svg',
-        caption: 'Live sound and recording sessions'
+        caption: 'Live audio integration'
       }
     ]
   };
@@ -202,8 +202,8 @@
 
   function handleShare(type) {
     const url = encodeURIComponent(window.location.href);
-    const title = encodeURIComponent('The Hearth - Professional Audio-Visual Production');
-    const text = encodeURIComponent('Shaping time, preserving stories.');
+    const title = encodeURIComponent('The Hearth — Reliable Audio-Visual Production | Garden Route');
+    const text = encodeURIComponent('Professional audio-visual production for the Garden Route.');
 
     switch (type) {
       case 'copy':
@@ -243,7 +243,7 @@
     var gallery = CONFIG.gallery;
 
     if (gallery.length === 0) {
-      elements.carouselTrack.innerHTML = '<div class="carousel-empty"><p>Gallery coming soon...</p></div>';
+      elements.carouselTrack.innerHTML = '<div class="carousel-empty"><p>Showreel coming soon...</p></div>';
       if (elements.carouselPrev) elements.carouselPrev.style.display = 'none';
       if (elements.carouselNext) elements.carouselNext.style.display = 'none';
       if (elements.carouselDots) elements.carouselDots.style.display = 'none';
