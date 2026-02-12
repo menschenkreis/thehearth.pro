@@ -342,6 +342,16 @@ input, textarea {
   justify-content: flex-start;
 }
 
+/* Ensure mobile menu buttons use readable text regardless of hero overlay */
+.navbar.at-hero .nav-mobile a,
+.navbar.at-hero .nav-mobile .btn-ghost {
+  color: var(--color-text);
+}
+
+.navbar.at-hero .nav-mobile .btn-primary {
+  color: #1a1a1a;
+}
+
 @media (max-width: 768px) {
   .nav-actions,
   .nav-links {
